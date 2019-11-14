@@ -1,11 +1,11 @@
-const TestRail = require('testrail');
+const TestRail = require('testrail')
 const dotenv = require('dotenv')
 const fs = require('fs')
-const ConsoleApp = require('./consoleApp.js')
 
-const Suite = require('./suite.js')
-const Section = require('./section.js')
-const TestCase = require('./cases.js')
+const ConsoleApp = require('./src/console-app.js')
+const Suite = require('./src/suite.js')
+const Section = require('./src/section.js')
+const TestCase = require('./src/cases.js')
 
 const consoleApp = new ConsoleApp()
 const section = new Section()
@@ -13,10 +13,11 @@ const suite = new Suite()
 const testcase = new TestCase()
 
 let envFile = null
+
 try {
   envFile = fs.readFileSync('.env')
 } catch (error) {
-  console.error('You don\'t have an .env file!\n', error)
+  console.error("You don't have an .env file!\n", error)
   process.exit(1)
 }
 
@@ -26,12 +27,12 @@ const api = new TestRail({
   host: config.NETWORK_URL,
   user: config.USERNAME,
   password: config.PASSWORD,
-});
+})
 
 class Reporter {
   constructor(globalConfig, options) {
-    this._globalConfig = globalConfig;
-    this._options = options;
+    this._globalConfig = globalConfig
+    this._options = options
   }
 
   async onRunComplete(contexts, results) {
@@ -54,7 +55,6 @@ class Reporter {
         const testCases = specResults[i].testResults
 
         const selectedSuiteId = await suite.selectSuite(projectId, fileName, api, consoleApp, customNames, path)
-
         const selectedSectionId = await section.selectSection(projectId, selectedSuiteId, api, consoleApp)
 
         await testcase.importCases(projectId, selectedSuiteId, selectedSectionId, testCases, api)
@@ -70,7 +70,6 @@ class Reporter {
         const testCases = specResults[i].testResults
 
         const suiteId = await suite.createSuite(projectId, suiteName, api)
-
         const sectionId = await section.createSection(projectId, suiteId, sectionName, api)
 
         await testcase.createCases(projectId, suiteId, sectionId, testCases, api)
@@ -78,6 +77,7 @@ class Reporter {
         console.log(`- ${'\x1b[32m'}${file}${'\x1b[0m'} - Spec completed. (${i + 1} of ${specResults.length})`)
       }
     }
+
     console.log(`${'\x1b[36m'}Import finished.${'\x1b[0m'}`)
   }
 
@@ -88,4 +88,4 @@ class Reporter {
   }
 }
 
-module.exports = Reporter;
+module.exports = Reporter
