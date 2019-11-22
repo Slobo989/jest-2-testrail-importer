@@ -82,7 +82,9 @@ class Reporter {
   }
 
   async deleteRuns() {
-    const getRuns = await api.getRuns(2, { created_after: 1555891200 })
+    const getRuns = await api.getRuns(2, {
+      created_after: 1555891200
+    })
     const runs = getRuns.map(run => run.id)
     runs.forEach(async run => await api.deleteRun(run))
   }

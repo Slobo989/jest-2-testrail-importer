@@ -12,7 +12,7 @@ class TestCase {
 
       for (let k = 0; k < oldCases.length; k++) {
         // If there is a name match, the case is not created (exists = true) and the for loop continues to the next case
-        if (oldCases[k].title === newCaseName) {
+        if (oldCases[k].title === newCaseName || oldCases[k].id === parseInt(newCaseName.split(':')[0])) {
           exists = true
           break
         }
@@ -31,7 +31,9 @@ class TestCase {
   async createCases(projectId, suiteId, sectionId, testCases, api) {
     for (let l = 0; l < testCases.length; l++) {
       const subsectionName = testCases[l].ancestorTitles[0]
-      let subsections = await api.getSections(projectId, { suite_id: suiteId })
+      let subsections = await api.getSections(projectId, {
+        suite_id: suiteId
+      })
 
       subsections = subsections.filter(sub => sub.parent_id === sectionId)
 
